@@ -1,30 +1,31 @@
+import 'package:my_app/features/consultation/consultation_view.dart';
+import 'package:my_app/features/patient_details/patient_details_view.dart';
+import 'package:my_app/features/patients/patients_view.dart';
+import 'package:my_app/services/consultation_service.dart';
+import 'package:my_app/services/patient_service.dart';
 import 'package:my_app/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:my_app/ui/dialogs/info_alert/info_alert_dialog.dart';
-import 'package:my_app/ui/views/home/home_view.dart';
-import 'package:my_app/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
-// @stacked-import
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: HomeView),
-    MaterialRoute(page: StartupView),
-// @stacked-route
+    MaterialRoute(page: PatientsView, initial: true),
+    MaterialRoute(page: PatientDetailsView),
+    MaterialRoute(page: ConsultationView),
   ],
   dependencies: [
-    LazySingleton(classType: BottomSheetService),
-    LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
-    // @stacked-service
+    LazySingleton(classType: DialogService),
+    LazySingleton(classType: BottomSheetService),
+    LazySingleton(classType: PatientService),
+    LazySingleton(classType: ConsultationService),
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
-    // @stacked-bottom-sheet
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
-    // @stacked-dialog
   ],
 )
 class App {}
