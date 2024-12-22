@@ -62,6 +62,10 @@ class TamagochiView extends StackedView<TamagochiViewModel> {
           ),
         ElevatedButton(
           onPressed: viewModel.createTamagochi,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kcPrimaryColor,
+            foregroundColor: Colors.white,
+          ),
           child: const Text('Create'),
         ),
       ],

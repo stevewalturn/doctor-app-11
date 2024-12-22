@@ -25,7 +25,8 @@ class TamagochiService with ReactiveServiceMixin {
     }
 
     if (_currentTamagochi.value!.hunger <= 0) {
-      throw Exception('${_currentTamagochi.value!.name} is not hungry right now!');
+      throw Exception(
+          '${_currentTamagochi.value!.name} is not hungry right now!');
     }
 
     _currentTamagochi.value = _currentTamagochi.value!.copyWith(

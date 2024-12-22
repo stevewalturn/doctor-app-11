@@ -21,6 +21,7 @@ class TamagochiViewModel extends BaseViewModel {
     try {
       _tamagochiService.createTamagochi(nameController.text.trim());
       nameController.clear();
+      clearErrors();
     } catch (e) {
       setError(e.toString());
     }
