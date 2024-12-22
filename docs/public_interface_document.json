@@ -1,6 +1,6 @@
 {
   "package_name": "com.walturn.my_app",
-  "project_description": "The Flutter application is a virtual pet (Tamagotchi) simulator that allows users to create, care for, and interact with a digital pet. The main features include creating a new Tamagotchi, feeding it, playing with it, and putting it to sleep. The application also includes a startup screen and a home screen with a counter, dialog, and bottom sheet functionality.",
+  "project_description": "The Flutter application is a virtual pet (Tamagotchi) simulator that allows users to create, care for, and interact with a digital pet. The main features include creating a new Tamagotchi, feeding it, playing with it, and putting it to sleep. The application also includes a startup screen, a home screen with a counter, dialog, and bottom sheet functionality, as well as a dedicated Tamagotchi management screen.",
   "architecture_overview": "The application is structured using the Stacked architecture pattern, which separates the concerns of the UI, view models, and services. The main components include the AppView, various feature-specific views and view models (e.g., StartupView, HomeView, TamagochiView), and services for managing dialogs, bottom sheets, navigation, and the Tamagotchi lifecycle. The application also uses a ScreenObserver to track screen transitions for analytics purposes.",
   "files": [
     {
