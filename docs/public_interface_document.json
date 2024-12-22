@@ -1,6 +1,6 @@
 {
   "package_name": "com.walturn.my_app",
-  "project_description": "The Flutter application is built using the Stacked architecture, which separates the concerns of the UI, view models, and services. It includes a startup screen, a home screen with a counter, a dialog, and a bottom sheet. The application integrates with Firebase for analytics tracking and supports localization and multiple flavors (development and production).",
+  "project_description": "The Flutter application is built using the Stacked architecture, which separates the concerns of the UI, view models, and services. The application has several key features, including a startup screen, a home screen with a counter, a dialog, and a bottom sheet. The application also integrates with Firebase for analytics tracking and supports localization and multiple flavors (development and production).",
   "architecture_overview": "The application is structured using the Stacked architecture. It utilizes Stacked for state management, routing, and dependency injection. The main components include the App, AppView, various feature-specific views and view models, and services for managing dialogs, bottom sheets, and navigation. The application also uses a ScreenObserver to track screen transitions for analytics purposes.",
   "files": [
     {
