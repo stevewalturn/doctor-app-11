@@ -1,7 +1,7 @@
 {
   "package_name": "com.walturn.my_app",
-  "project_description": "The Flutter application is built using the Stacked architecture, which separates the concerns of the UI, view models, and services. The application has several key features, including a startup screen, a home screen with a counter, a dialog, and a bottom sheet. The application also integrates with Firebase for analytics tracking and supports localization and multiple flavors (development and production).",
-  "architecture_overview": "The application is structured using the Stacked architecture. It utilizes Stacked for state management, routing, and dependency injection. The main components include the App, AppView, various feature-specific views and view models, and services for managing dialogs, bottom sheets, and navigation. The application also uses a ScreenObserver to track screen transitions for analytics purposes.",
+  "project_description": "The Flutter application is a virtual pet (Tamagotchi) simulator that allows users to create, care for, and interact with a digital pet. The main features include creating a new Tamagotchi, feeding it, playing with it, and putting it to sleep. The application also includes a startup screen and a home screen with a counter, dialog, and bottom sheet functionality.",
+  "architecture_overview": "The application is structured using the Stacked architecture pattern, which separates the concerns of the UI, view models, and services. The main components include the AppView, various feature-specific views and view models (e.g., StartupView, HomeView, TamagochiView), and services for managing dialogs, bottom sheets, navigation, and the Tamagotchi lifecycle. The application also uses a ScreenObserver to track screen transitions for analytics purposes.",
   "files": [
     {
       "name": "lib/app/app.dart",
@@ -840,6 +840,225 @@
         "package:stacked/stacked.dart",
         "package:stacked_services/stacked_services.dart"
       ]
+    },
+    {
+      "name": "lib/services/tamagochi_service.dart",
+      "description": "The TamagochiService is responsible for managing the state and lifecycle of a virtual pet, known as a Tamagochi. It provides the core functionality for creating, feeding, playing with, and putting the Tamagochi to sleep, as well as handling the gradual decay of the Tamagochi's hunger, happiness, and energy levels over time.",
+      "class_diagram": "@startuml\nclass TamagochiService {\n  - Timer? _decayTimer\n  - Tamagochi? _currentTamagochi\n  - Tamagochi? get currentTamagochi\n  + void createTamagochi(String name)\n  + void feed()\n  + void play()\n  + void sleep()\n  - void _startDecayTimer()\n  + void dispose()\n}\n@enduml",
+      "methods": [
+        {
+          "name": "createTamagochi",
+          "description": "Creates a new Tamagochi instance with the provided name and assigns it to the _currentTamagochi property.",
+          "parameters": [
+            "String name"
+          ],
+          "return_type": "void"
+        },
+        {
+          "name": "feed",
+          "description": "Reduces the hunger level of the current Tamagochi by 30, clamped between 0 and 100. Updates the lastFed timestamp.",
+          "parameters": [],
+          "return_type": "void"
+        },
+        {
+          "name": "play",
+          "description": "Increases the happiness level of the current Tamagochi by 30, clamped between 0 and 100. Decreases the energy level by 20, clamped between 0 and 100. Updates the lastPlayed timestamp.",
+          "parameters": [],
+          "return_type": "void"
+        },
+        {
+          "name": "sleep",
+          "description": "Sets the energy level of the current Tamagochi to 100 and updates the lastSlept timestamp.",
+          "parameters": [],
+          "return_type": "void"
+        },
+        {
+          "name": "_startDecayTimer",
+          "description": "Starts a recurring timer that updates the current Tamagochi's hunger, happiness, and energy levels every minute.",
+          "parameters": [],
+          "return_type": "void"
+        },
+        {
+          "name": "dispose",
+          "description": "Cancels the _decayTimer when the TamagochiService is disposed.",
+          "parameters": [],
+          "return_type": "void"
+        }
+      ],
+      "dependencies": [
+        "dart:async",
+        "package:my_app/models/tamagochi.dart",
+        "package:stacked/stacked.dart"
+      ]
+    },
+    {
+      "name": "lib/features/tamagochi/tamagochi_viewmodel.dart",
+      "description": "This Dart file defines the TamagochiViewModel class, which is responsible for managing the state and behavior of a Tamagotchi-like virtual pet within a Flutter application. The primary purpose of this class is to provide a view model that encapsulates the core functionality of the Tamagotchi feature, making it easily consumable by the app's UI layer.",
+      "class_diagram": "@startuml\nclass TamagochiViewModel {\n  -_tamagochiService: TamagochiService\n  +nameController: TextEditingController\n  +hasTamagochi: bool\n  +tamagochiName: String\n  +happiness: int\n  +hunger: int\n  +energy: int\n  +TamagochiViewModel()\n  +createTamagochi(): void\n  +feed(): void\n  +play(): void\n  +sleep(): void\n  +dispose(): void\n}\n\nclass TamagochiService {\n  +createTamagochi(name: String): void\n  +feed(): void\n  +play(): void\n  +sleep(): void\n  +currentTamagochi: Tamagotchi\n}\n@enduml",
+      "methods": [
+        {
+          "name": "TamagochiViewModel",
+          "description": "The constructor for the TamagochiViewModel class. It sets up the necessary dependencies and listens for changes to the Tamagotchi's state.",
+          "parameters": null,
+          "return_type": null
+        },
+        {
+          "name": "createTamagochi",
+          "description": "Creates a new Tamagotchi instance with the name provided by the user through the nameController. If successful, the Tamagotchi's details are displayed in the UI.",
+          "parameters": null,
+          "return_type": "void"
+        },
+        {
+          "name": "feed",
+          "description": "Feeds the current Tamagotchi, increasing its hunger level. This updates the Tamagotchi's state and notifies the UI.",
+          "parameters": null,
+          "return_type": "void"
+        },
+        {
+          "name": "play",
+          "description": "Plays with the current Tamagotchi, increasing its happiness level. This updates the Tamagotchi's state and notifies the UI.",
+          "parameters": null,
+          "return_type": "void"
+        },
+        {
+          "name": "sleep",
+          "description": "Puts the current Tamagotchi to sleep, increasing its energy level. This updates the Tamagotchi's state and notifies the UI.",
+          "parameters": null,
+          "return_type": "void"
+        },
+        {
+          "name": "dispose",
+          "description": "Cleans up the resources used by the TamagochiViewModel, such as the nameController.",
+          "parameters": null,
+          "return_type": "void"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/app/app.locator.dart",
+        "package:my_app/services/tamagochi_service.dart",
+        "package:stacked/stacked.dart"
+      ]
+    },
+    {
+      "name": "lib/models/tamagochi.dart",
+      "description": "This file defines the Tamagochi class, which represents a virtual pet in a Tamagochi-style game. The Tamagochi class encapsulates the core data and behavior of a Tamagochi, providing a centralized model for managing its state and interactions.",
+      "class_diagram": "@startuml\nclass Tamagochi {\n  +String id\n  +String name\n  +int happiness\n  +int hunger\n  +int energy\n  +DateTime lastFed\n  +DateTime lastPlayed\n  +DateTime lastSlept\n  +Tamagochi.create(name)\n  +Tamagochi copyWith(...)\n  +bool get needsFood()\n  +bool get needsPlay()\n  +bool get needsSleep()\n}\n@enduml",
+      "methods": [
+        {
+          "name": "Tamagochi.create",
+          "description": "Factory constructor that creates a new Tamagochi instance with the specified name and initializes its default state.",
+          "parameters": [
+            "String name"
+          ],
+          "return_type": "Tamagochi"
+        },
+        {
+          "name": "copyWith",
+          "description": "Creates a new Tamagochi instance with the specified properties, allowing selective updates to the Tamagochi's state.",
+          "parameters": [
+            "String? id",
+            "String? name",
+            "int? happiness",
+            "int? hunger",
+            "int? energy",
+            "DateTime? lastFed",
+            "DateTime? lastPlayed",
+            "DateTime? lastSlept"
+          ],
+          "return_type": "Tamagochi"
+        },
+        {
+          "name": "needsFood",
+          "description": "Checks if the Tamagochi's hunger level is high enough to indicate that it needs to be fed.",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "needsPlay",
+          "description": "Checks if the Tamagochi's happiness level is low enough to indicate that it needs to be played with.",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "needsSleep",
+          "description": "Checks if the Tamagochi's energy level is low enough to indicate that it needs to be put to sleep.",
+          "parameters": null,
+          "return_type": "bool"
+        }
+      ],
+      "dependencies": [
+        "package:equatable/equatable.dart"
+      ]
+    },
+    {
+      "name": "lib/features/tamagochi/tamagochi_view.dart",
+      "description": "The TamagochiView is responsible for rendering the user interface for the Tamagochi virtual pet application. It displays the current state of the Tamagochi, such as its happiness, hunger, and energy levels, and provides buttons for the user to interact with the Tamagochi by feeding it, playing with it, or putting it to sleep.",
+      "class_diagram": "@startuml\nclass TamagochiView {\n  + builder(BuildContext, TamagochiViewModel, Widget): Widget\n  + _buildCreateTamagochiUI(TamagochiViewModel): Widget\n  + _buildTamagochiUI(TamagochiViewModel): Widget\n  + _buildStatusBar(String, int, Color): Widget\n  + _buildActionButton(VoidCallback, IconData, String): Widget\n  + viewModelBuilder(BuildContext): TamagochiViewModel\n}\n@enduml",
+      "methods": [
+        {
+          "name": "builder",
+          "description": "Builds the main UI for the TamagochiView, either displaying the create Tamagochi UI or the Tamagochi UI, depending on whether the user has a Tamagochi or not.",
+          "parameters": [
+            "BuildContext",
+            "TamagochiViewModel",
+            "Widget"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "_buildCreateTamagochiUI",
+          "description": "Builds the UI for creating a new Tamagochi, including a text field for the user to enter the Tamagochi's name and a button to create the Tamagochi.",
+          "parameters": [
+            "TamagochiViewModel"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "_buildTamagochiUI",
+          "description": "Builds the UI for displaying the current state of the Tamagochi, including its name, happiness, hunger, and energy levels, as well as buttons for the user to interact with the Tamagochi.",
+          "parameters": [
+            "TamagochiViewModel"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "_buildStatusBar",
+          "description": "Builds a status bar UI element to display the current value of a Tamagochi attribute (e.g., happiness, hunger, energy) as a percentage and a linear progress bar.",
+          "parameters": [
+            "String",
+            "int",
+            "Color"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "_buildActionButton",
+          "description": "Builds a button UI element to represent an action the user can take to interact with the Tamagochi (e.g., feed, play, sleep).",
+          "parameters": [
+            "VoidCallback",
+            "IconData",
+            "String"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "viewModelBuilder",
+          "description": "Provides a new instance of the TamagochiViewModel to the StackedView.",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "TamagochiViewModel"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:gap/gap.dart",
+        "package:my_app/features/tamagochi/tamagochi_viewmodel.dart",
+        "package:my_app/ui/common/app_colors.dart",
+        "package:my_app/ui/common/ui_helpers.dart",
+        "package:stacked/stacked.dart"
+      ]
     }
   ],
   "dependencies": [
@@ -864,7 +1083,7 @@
       "purpose": "Creating gaps in layouts"
     }
   ],
-  "sequence_diagram": "@startuml\nactor User\nparticipant main\nparticipant AppView\nparticipant StartupView\nparticipant StartupViewModel\nparticipant HomeView\nparticipant HomeViewModel\n\nUser -> main: Launch app\nmain -> AppView: Create and run\nAppView -> StartupView: Initialize\nStartupView -> StartupViewModel: Run startup logic\nStartupViewModel -> HomeView: Navigate on completion\nHomeView -> HomeViewModel: Initialize\nUser -> HomeView: Interact\nHomeView -> HomeViewModel: Handle user actions\nHomeViewModel -> HomeView: Update UI\nHomeViewModel -> DialogService: Show dialog\nHomeViewModel -> BottomSheetService: Show bottom sheet\n@enduml",
-  "state_management_flow": "The application uses the Stacked architecture for state management. Each view has a corresponding ViewModel that handles the business logic and state for that view. The ViewModels are responsible for updating the UI, interacting with services (e.g., DialogService, BottomSheetService), and managing the application's overall state. The app.locator.dart file sets up the necessary dependency injections, allowing the ViewModels to access the required services.",
-  "navigation_flow": "The application's navigation is managed using the Stacked Router, defined in app.router.dart. The main entry point is the AppView, which initializes the Stacked architecture and displays the StartupView. After the startup logic is completed, the StartupViewModel navigates to the HomeView. The HomeView allows the user to interact with the application, triggering updates to the HomeViewModel, which in turn updates the UI and can show dialogs or bottom sheets as needed."
+  "sequence_diagram": "@startuml\nactor User\nparticipant AppView\nparticipant StartupView\nparticipant StartupViewModel\nparticipant HomeView\nparticipant HomeViewModel\nparticipant TamagochiView\nparticipant TamagochiViewModel\nparticipant TamagochiService\n\nUser -> AppView: Launch app\nAppView -> StartupView: Initialize\nStartupView -> StartupViewModel: Run startup logic\nStartupViewModel -> HomeView: Navigate on completion\nHomeView -> HomeViewModel: Initialize\nUser -> HomeView: Interact (e.g., show dialog, show bottom sheet)\nHomeView -> HomeViewModel: Handle user actions\nHomeViewModel -> DialogService: Show dialog\nHomeViewModel -> BottomSheetService: Show bottom sheet\n\nUser -> TamagochiView: Interact with Tamagotchi\nTamagochiView -> TamagochiViewModel: Handle user actions\nTamagochiViewModel -> TamagochiService: Manage Tamagotchi state\nTamagochiService -> TamagochiViewModel: Update Tamagotchi state\nTamagochiViewModel -> TamagochiView: Update UI\n@enduml",
+  "state_management_flow": "The application uses the Stacked architecture for state management. Each view has a corresponding ViewModel that handles the business logic and state for that view. The ViewModels are responsible for updating the UI, interacting with services (e.g., DialogService, BottomSheetService, TamagochiService), and managing the application's overall state. The app.locator.dart file sets up the necessary dependency injections, allowing the ViewModels to access the required services.",
+  "navigation_flow": "The application's navigation is managed using the Stacked Router, defined in app.router.dart. The main entry point is the AppView, which initializes the Stacked architecture and displays the StartupView. After the startup logic is completed, the StartupViewModel navigates to the HomeView. The HomeView allows the user to interact with the application, triggering updates to the HomeViewModel, which in turn updates the UI and can show dialogs or bottom sheets as needed. The TamagochiView is accessible from the HomeView, allowing the user to interact with the virtual pet."
 }
